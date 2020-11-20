@@ -103,39 +103,6 @@ function resolveEntriesPath(entries) {
   return entries;
 }
 
-function babelLoader() {
-  const plugins = [
-    "@babel/plugin-transform-runtime",
-    "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-proposal-optional-chaining"
-  ];
-
-  if (ENABLE_SOURCE_MAPS) {
-    plugins.push("babel-plugin-source-map-support");
-  }
-
-  return {
-    loader: "babel-loader",
-    options: {
-      // Enable caching
-      cacheDirectory: ENABLE_CACHING,
-      // Disable compresisng cache files to speed up caching
-      cacheCompression: false,
-      plugins: plugins.map(require.resolve),
-      presets: [
-        [
-          require.resolve("@babel/preset-env"),
-          {
-            targets: {
-              node: nodeVersion
-            }
-          }
-        ]
-      ]
-    }
-  };
-}
-
 function eslintLoader() {
   return {
     loader: "eslint-loader",
@@ -159,11 +126,6 @@ function tsLoader() {
 function loaders() {
   const loaders = {
     rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: [babelLoader()]
-      },
       {
         test: /\.mjs$/,
         include: /node_modules/,
@@ -206,7 +168,7 @@ function loaders() {
   if (ENABLE_TYPESCRIPT) {
     loaders.rules.push({
       test: /\.ts$/,
-      use: [babelLoader(), tsLoader()],
+      use: [tsLoader()],
       exclude: [
         [
           path.resolve(servicePath, "node_modules"),
