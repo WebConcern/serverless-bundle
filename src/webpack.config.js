@@ -42,6 +42,7 @@ const ENABLE_LINTING = config.options.linting;
 const ENABLE_SOURCE_MAPS = config.options.sourcemaps;
 const ENABLE_TYPESCRIPT = fs.existsSync(tsConfigPath);
 const ENABLE_CACHING = isLocal ? config.options.caching : false;
+const ENABLE_TYPESCRIPT_FORKTSCHECKER = config.options.forkTsChecker;
 
 // Handle the "all" option in externals
 // And add the forceExclude packages to it because they shouldn't be Webpacked
@@ -237,7 +238,7 @@ function loaders() {
 function plugins() {
   const plugins = [];
 
-  if (ENABLE_TYPESCRIPT) {
+  if (ENABLE_TYPESCRIPT && ENABLE_TYPESCRIPT_FORKTSCHECKER) {
     const forkTsCheckerWebpackOptions = { tsconfig: tsConfigPath };
 
     if (ENABLE_LINTING) {
